@@ -13,20 +13,20 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // haetaan näyttö objekti jotta päästään näytön tietoihin käsiksi
+        // haetaan display objekti jotta saadaan ruudun tiedot käsittelyyn
         Display display = getWindowManager().getDefaultDisplay();
 
-        // tarkistetaan näytön koko pisteinä
+        // ladataan ruudun koko pisteinä
         Point size = new Point();
         display.getSize(size);
 
-        // asetetaan pongview näkymään näytölle
+        // asetetaan pongview pää näkymäksi
         pongView = new PongView(this, size.x, size.y);
         setContentView(pongView);
 
     }
 
-    // tämä tapahtuu kun pelaaja aloittaa pelin
+    // tämä tapahtuu kun käynnistetään peli
     @Override
     protected void onResume() {
         super.onResume();
@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
         pongView.resume();
     }
 
-    // laitetaan peli pauselle kun käyttäjä sulkee pelin
+    // tämä tapahtuu kun pelaaja lopettaa pelin
     @Override
     protected void onPause() {
         super.onPause();

@@ -79,11 +79,11 @@ class PongView extends SurfaceView implements Runnable {
     */
         super(context);
 
-        // näytön leveys ja korkeus
+        // Set the screen width and height
         mNayttoX = x;
         mNayttoY = y;
 
-
+        // Initialize mOurHolder and mPaint objects
         mOurHolder = getHolder();
         mPaint = new Paint();
 
