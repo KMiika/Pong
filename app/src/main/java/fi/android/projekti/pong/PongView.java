@@ -306,6 +306,7 @@ class PongView extends SurfaceView implements Runnable {
     // shutdown our thread.
     public void pause() {
         mPlaying = false;
+
         try {
             mGameThread.join();
         } catch (InterruptedException e) {
