@@ -1,6 +1,7 @@
 package fi.android.projekti.pong;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Point;
 import android.location.Location;
 import android.os.Bundle;
@@ -12,25 +13,31 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 
     PongView pongView;
-    Button startButton;
+    boolean menu = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main); //Pitäisi saada tällä menu näkyviin, mutta tällä hetkellä avaa suoraan pelin.
-        //startButton = (Button) findViewById(R.id.startGameBtn);
 
+        if (menu == true) {
+            Intent intent = new Intent(this, MenuActivity.class);
+            startActivity(intent);
+            menu = false;
+        }
 
-        // haetaan display objekti jotta sadaan ruudun tiedot käsittelyyn
-        Display display = getWindowManager().getDefaultDisplay();
+        else {
+            // haetaan display objekti jotta sadaan ruudun tiedot käsittelyyn
+            Display display = getWindowManager().getDefaultDisplay();
 
-        // ladataan ruudun koko pisteinä
-        Point size = new Point();
-        display.getSize(size);
+            // ladataan ruudun koko pisteinä
+            Point size = new Point();
+            display.getSize(size);
 
-        // asetetaan pongview pää näkymäksi
-        pongView = new PongView(this, size.x, size.y);
-        setContentView(pongView);
+            // asetetaan pongview pää näkymäksi
+            pongView = new PongView(this, size.x, size.y);
+            setContentView(pongView);
+        }
 
     }
 
