@@ -22,13 +22,11 @@ class PongView extends SurfaceView implements Runnable {
     // pää koodi, Threadi
     Thread mGameThread = null;
 
-    // We need a SurfaceHolder object
-    // We will see it in action in the draw method soon.
+
     SurfaceHolder mOurHolder;
 
-    // A boolean which we will set and unset
-    // when the game is running- or not
-    // It is volatile because it is accessed from inside and outside the thread
+
+    // booleani jolla asetetaan onko peli käynnissä vai ei, volatile bool koska sitä käsitellään luokan ulkopuolellakin
     volatile boolean mPlaying;
 
     // peli alkaa pausella
@@ -48,7 +46,7 @@ class PongView extends SurfaceView implements Runnable {
     // palikka
     pelaaja mPelaaja;
     //pelaaja2 mPelaaja2
-
+    //pelaaja2 mPelaaja2;
     // pallo
     pallo mPallo;
 
@@ -66,10 +64,9 @@ class PongView extends SurfaceView implements Runnable {
     int mLives = 3;
 
 
-    /*
-    When the we call new() on pongView
-    This custom constructor runs
-*/
+
+  //  Aina kun kutsutaan new()  pongViewiin niin tämä custom construktori ajetaan
+
 
     public PongView(Context context, int x, int y) {
 
@@ -79,17 +76,17 @@ class PongView extends SurfaceView implements Runnable {
     */
         super(context);
 
-        // Set the screen width and height
+        // näytön korkeus ja leveys
         mNayttoX = x;
         mNayttoY = y;
 
-        // Initialize mOurHolder and mPaint objects
+        // alustetaan mOurHolder ja mPaint objectit
         mOurHolder = getHolder();
         mPaint = new Paint();
 
         // luodaan pelaaja
         mPelaaja = new pelaaja(mNayttoX, mNayttoY);
-        //mPelaaja2 = new pelaaja(,NayttoX, mNayttoY);
+       // mPelaaja2 = new pelaaja2(mNayttoX, mNayttoY);
 
         // luodaan pallo
         mPallo = new pallo(mNayttoX, mNayttoY);
@@ -117,11 +114,11 @@ class PongView extends SurfaceView implements Runnable {
 
 
         try {
-            // Create objects of the 2 required classes
+            // luodaan objectit kahdesta vaaditusta classes
             AssetManager assetManager = context.getAssets();
             AssetFileDescriptor descriptor;
 
-            // Load our fx in memory ready for use
+            // ladataan ääniefektit muistiin käyttöä varten
             descriptor = assetManager.openFd("beep1.ogg");
             beep1ID = sp.load(descriptor, 0);
 
@@ -134,11 +131,9 @@ class PongView extends SurfaceView implements Runnable {
             descriptor = assetManager.openFd("loseLife.ogg");
             loseLifeID = sp.load(descriptor, 0);
 
-            //descriptor = assetManager.openFd("explode.ogg");
-            //explodeID = sp.load(descriptor, 0);
 
         } catch (IOException e) {
-            // Print an error message to the console
+            // tulostetaan error viesti consoleen
             Log.e("error", "failed to load sound files");
         }
 
@@ -148,10 +143,10 @@ class PongView extends SurfaceView implements Runnable {
 
     public void setupAndRestart() {
 
-        // Put the mPallo back to the start
+        // pallo aloituskohtaan HUOM! vaihda pallon aloitus koordinaatti keskelle ruutua
         mPallo.reset(mNayttoX, mNayttoY);
 
-        // if game over reset scores and mLives
+        // peli ohi -> pisteet ja elämät myös resetoidaan
         if (mLives == 0) {
             mScore = 0;
             mLives = 3;
@@ -163,22 +158,20 @@ class PongView extends SurfaceView implements Runnable {
     public void run() {
         while (mPlaying) {
 
-            // Capture the current time in milliseconds in startFrameTime
+            // otetaan current time millisekunneiksi jotta saadaan tiheä päivitys frameille
             long startFrameTime = System.currentTimeMillis();
 
-            // Update the frame
-            // Update the frame
+            // päivitetään frame
+
             if (!mPaused) {
                 update();
             }
 
-            // Draw the frame
+            // piiretään frame
             draw();
 
         /*
-            Calculate the FPS this frame
-            We can then use the result to
-            time animations in the update methods.
+            Lasketaan FPS framelle jotta sitä voidaan käyttää update metodissa
         */
             long timeThisFrame = System.currentTimeMillis() - startFrameTime;
             if (timeThisFrame >= 1) {
@@ -189,21 +182,21 @@ class PongView extends SurfaceView implements Runnable {
 
     }
 
-    // Everything that needs to be updated goes in here
-    // Movement, collision detection etc.
+    // tähän tulee kaikki mitä pitää päivittää framejen välillä
     public void update(){
 
-        // Move the mPelaaja if required
+        // liikutetaan pelaajaa jos tarve
         mPelaaja.update(mFPS);
         //mPelaaja2.update(mFPS);
         mPallo.update(mFPS);
-        // Check for mPallo colliding with mPelaaja
+        // tarkistus jos pallo osuu pelaajaan
         if(RectF.intersects(mPelaaja.getRect(), mPallo.getRect())) {
             mPallo.setRandomXNopeus();
             mPallo.vastakkainenYNopeus();
             mPallo.clearObstacleY(mPelaaja.getRect().top - 2);
+            //mPallo.clearObstacleY(mPelaaja2.getRect().bottom - 2);
 
-            mScore++;
+            mScore++; //JOS JA KUN muutetaan pisteytystä niin muista muuttaa tämä
             mPallo.kasvataNopus();
 
             sp.play(beep1ID, 1, 1, 0, 0, 1);
@@ -224,12 +217,13 @@ class PongView extends SurfaceView implements Runnable {
         */
 
 
-        // Bounce the mPallo back when it hits the bottom of screen
+        // tässä pallo bounchaa jos se osuu pohjalle eikä pelaajaan, muutos tähän jos ja kun saa pelin muuten toimimaan
+        // tähän lisätään että jos osuu bot niin p2 score++ ja pallo resetti
         if(mPallo.getRect().bottom > mNayttoY){
             mPallo.vastakkainenYNopeus();
             mPallo.clearObstacleY(mNayttoY - 2);
 
-            // Lose a life
+            // tällähetkellä menettää elämän, mutta se muutetaan vastustajan pisteeksi
             mLives--;
             sp.play(loseLifeID, 1, 1, 0, 0, 1);
 
@@ -238,21 +232,22 @@ class PongView extends SurfaceView implements Runnable {
                 setupAndRestart();
             }
         }
-        // Bounce the mPallo back when it hits the top of screen
+        // Tässä tällähetkellä pallo kimpoaa jos se osuu yläreunaan mutta tulee muuttumaan
+        //tämänkin lähtee periaattessa pois koska
         if(mPallo.getRect().top < 0){
             mPallo.vastakkainenYNopeus();
             mPallo.clearObstacleY(12);
 
             sp.play(beep2ID, 1, 1, 0, 0, 1);
         }
-        // If the mPallo hits left wall bounce
+        // pallon osuminen vasempaan
         if(mPallo.getRect().left < 0){
             mPallo.vastakkainenXNopeus();
             mPallo.clearObstacleX(2);
 
             sp.play(beep3ID, 1, 1, 0, 0, 1);
         }
-        // If the mPallo hits right wall bounce
+        // pallon osuminen oikeaan
         if(mPallo.getRect().right > mNayttoX){
             mPallo.vastakkainenXNopeus();
             mPallo.clearObstacleX(mNayttoX - 22);
@@ -264,46 +259,45 @@ class PongView extends SurfaceView implements Runnable {
     }
 
 
-    // Draw the newly updated scene
+    // piirretään uusi "kohtaus" mitä update metodista tulee
     public void draw() {
 
-        // Make sure our drawing surface is valid or we crash
+        // "drawing surface" pitää tarkistaa että onko se validi tai peli cräshää
         if (mOurHolder.getSurface().isValid()) {
 
-            // Draw everything here
+            // piiretään kaikki
 
-            // Lock the mCanvas ready to draw
+            // lukitaan "mCanvas" piirtoa varten
             mCanvas = mOurHolder.lockCanvas();
 
-            // Clear the screen with my favorite color
+            // taustaväri vihreäksi (toki voi muuttaa vaan kuvaksi drawableen jos haluaa)
             mCanvas.drawColor(Color.argb(255, 120, 197, 87));
 
-            // Choose the brush color for drawing
+            // vaihdetaan väri valkoiseksi
             mPaint.setColor(Color.argb(255, 255, 255, 255));
 
-            // Draw the mPelaaja
+            // piirretään pelaaja
             mCanvas.drawRect(mPelaaja.getRect(), mPaint);
-            //mCanvas.drawRect(mPelaaja2.getRect(), mPaint)
+            //mCanvas.drawRect(mPelaaja2.getRect(), mPaint);
 
-            // Draw the mPallo
+            // piirretään pallo
             mCanvas.drawRect(mPallo.getRect(), mPaint);
 
 
             // Change the drawing color to white
             mPaint.setColor(Color.argb(255, 255, 255, 255));
 
-            // Draw the mScore
+            // piirretään pistetys
             mPaint.setTextSize(40);
             mCanvas.drawText("Score: " + mScore + "   Lives: " + mLives, 10, 50, mPaint);
 
-            // Draw everything to the screen
+            // ja tämä toteuttaa lopullisen piirron/päivityksen ruudulle eli kaikki ylhäällä listatut piirrot
             mOurHolder.unlockCanvasAndPost(mCanvas);
         }
 
 
     }
-    // If the Activity is paused/stopped
-    // shutdown our thread.
+    // jos peli pausetetaan tai sammutetaan niin pitää sulkea gamethread
     public void pause() {
         mPlaying = false;
         try {
@@ -314,16 +308,14 @@ class PongView extends SurfaceView implements Runnable {
 
     }
 
-    // If the Activity starts/restarts
-    // start our thread.
+    // jos peli alkaa tai restarttaa niin aloitetaan threadi
     public void resume() {
         mPlaying = true;
         mGameThread = new Thread(this);
         mGameThread.start();
     }
 
-    // The SurfaceView class implements onTouchListener
-    // So we can override this method and detect screen touches.
+    // The SurfaceView class implements onTouchListener --> monitoroidaan näytön kosketusta
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
 
