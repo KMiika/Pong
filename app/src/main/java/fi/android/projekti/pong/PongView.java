@@ -1,6 +1,7 @@
 package fi.android.projekti.pong;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Canvas;
@@ -24,6 +25,7 @@ class PongView extends SurfaceView implements Runnable {
 
 
     SurfaceHolder mOurHolder;
+
 
 
     // booleani jolla asetetaan onko peli käynnissä vai ei, volatile bool koska sitä käsitellään luokan ulkopuolellakin
@@ -300,6 +302,7 @@ class PongView extends SurfaceView implements Runnable {
     // jos peli pausetetaan tai sammutetaan niin pitää sulkea gamethread
     public void pause() {
         mPlaying = false;
+
 
         try {
             mGameThread.join();

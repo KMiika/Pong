@@ -13,20 +13,14 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 
     PongView pongView;
-    boolean menu = true;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (menu == true) {
-            Intent intent = new Intent(this, MenuActivity.class);
-            startActivity(intent);
-            menu = false;
-        }
 
-        else {
             // haetaan display objekti jotta sadaan ruudun tiedot käsittelyyn
             Display display = getWindowManager().getDefaultDisplay();
 
@@ -39,7 +33,7 @@ public class MainActivity extends Activity {
             setContentView(pongView);
         }
 
-    }
+
 
     // tämä tapahtuu kun käynnistetään peli
     @Override
@@ -60,3 +54,4 @@ public class MainActivity extends Activity {
     }
 
 }
+
