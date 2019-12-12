@@ -51,6 +51,9 @@ public class pelaaja {
         // kuinka nopeaa pelaaja kulkee ruudun poikki (1 sekunti (pixels per second))
         mPelaajaNopeus = mNayttoX;
     }
+
+
+
     // luodaan get metodi jotta saadaan kutsuttua pelaajaa PongView luokassa
     public RectF getRect(){
         return mRect;
@@ -82,9 +85,9 @@ public class pelaaja {
         }
         if(mRect.right > mNayttoX)
         {
-            mXCoord = mNayttoX -
-                    // pelaajan/palikan leveys
-                    (mRect.right - mRect.left);
+            // pelaajan/palikan leveys
+            mXCoord = mNayttoX - (mRect.right - mRect.left);
+
         }
 
         // päivitetään Rect grafiikka (pelaaja/palikka)
