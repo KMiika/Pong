@@ -13,6 +13,7 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -25,7 +26,6 @@ class PongView extends SurfaceView implements Runnable {
 
 
     SurfaceHolder mOurHolder;
-
 
 
     // booleani jolla asetetaan onko peli käynnissä vai ei, volatile bool koska sitä käsitellään luokan ulkopuolellakin
@@ -310,6 +310,8 @@ class PongView extends SurfaceView implements Runnable {
             Log.e("Error:", "joining thread");
         }
 
+        Intent intent = new Intent(getContext(),MenuActivity.class);
+        getContext().startActivity(intent);
     }
 
     // jos peli alkaa tai restarttaa niin aloitetaan threadi

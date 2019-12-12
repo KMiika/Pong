@@ -9,17 +9,22 @@ import android.widget.Button;
 
 public class MenuActivity extends AppCompatActivity {
 
-    Button nappi;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        nappi = (Button) findViewById(R.id.button);
 
 
 
-
+        final Button button = findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent= new Intent(MenuActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
         }
     }
