@@ -273,7 +273,7 @@ class PongView extends SurfaceView implements Runnable {
             mCanvas = mOurHolder.lockCanvas();
 
             // taustaväri vihreäksi (toki voi muuttaa vaan kuvaksi drawableen jos haluaa)
-            mCanvas.drawColor(Color.argb(255, 120, 197, 87));
+            mCanvas.drawColor(Color.argb(255, 1, 1, 1));
 
             // vaihdetaan väri valkoiseksi
             mPaint.setColor(Color.argb(255, 255, 255, 255));
