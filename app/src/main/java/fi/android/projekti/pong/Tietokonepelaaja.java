@@ -2,9 +2,12 @@ package fi.android.projekti.pong;
 
 import android.graphics.RectF;
 
-public class pelaaja {
+public class Tietokonepelaaja {
 
 
+
+ /*
+    AI:N LUONTI VAIHEESSA, LUOKASTA TULEE ERINLAINEN KUIN SE TÄLLÄ HETKELLÄ ON
     private RectF mRect;
 
     // palikan/pelaajan kokoon vaikuttavat muuttujat
@@ -30,12 +33,14 @@ public class pelaaja {
     private int mNayttoY;
 
     int mP;
+    pallo pal;
     // construktori
 
-    public pelaaja(int x, int y, int mP){
+    public Tietokonepelaaja(int x, int y, int mP, pallo plo){
 
         mNayttoX = x;
         mNayttoY = y;
+        pal = plo;
 
         // 1/8 ruudun leveys
         mLeveys = mNayttoX / 8;
@@ -44,7 +49,7 @@ public class pelaaja {
         mKorkeus = mNayttoY / 25;
 
         if (mP == 1)
-            // pelaajan aloituskohta
+        // pelaajan aloituskohta
         {
             mXCoord = mNayttoX / 2;
             mYCoord = mNayttoY - 20;
@@ -101,6 +106,5 @@ public class pelaaja {
         mRect.left = mXCoord;
         mRect.right = mXCoord + mLeveys;
     }
-
+*/
 }
-

@@ -17,6 +17,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.io.IOException;
+import java.util.Random;
 
 class PongView extends SurfaceView implements Runnable {
     // pää koodi, Threadi
@@ -46,7 +47,9 @@ class PongView extends SurfaceView implements Runnable {
     // palikka
     pelaaja mPelaaja;
     //pelaaja2 mPelaaja2
-    //pelaaja2 mPelaaja2;
+    pelaaja mTietokone;
+    Random mRandomGen;
+    float mTietokoneLiikemahdollisuus;
     // pallo
     pallo mPallo;
 
@@ -71,8 +74,7 @@ class PongView extends SurfaceView implements Runnable {
     public PongView(Context context, int x, int y) {
 
     /*
-        The next line of code asks the
-        SurfaceView class to set up our object.
+        surfaceview asettaa objektin (super(context))
     */
         super(context);
 
@@ -85,19 +87,21 @@ class PongView extends SurfaceView implements Runnable {
         mPaint = new Paint();
 
         // luodaan pelaaja
-        mPelaaja = new pelaaja(mNayttoX, mNayttoY);
+        mPelaaja = new pelaaja(mNayttoX, mNayttoY, 1);
        // mPelaaja2 = new pelaaja2(mNayttoX, mNayttoY);
+        //luodaan tietokonepelaaja
+        mTietokone = new pelaaja(mNayttoX, mNayttoY, 2);
+        mRandomGen = new Random();
+        mTietokoneLiikemahdollisuus = 0.6f;
 
         // luodaan pallo
         mPallo = new pallo(mNayttoX, mNayttoY);
 
     /*
-        Instantiate our sound pool
-        dependent upon which version
-        of Android is present
+        alustetaan soundpooli oikealle android versiolle (versiolle jota käytetään)
     */
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_MEDIA)
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -114,7 +118,7 @@ class PongView extends SurfaceView implements Runnable {
 
 
         try {
-            // luodaan objectit kahdesta vaaditusta classes
+            // luodaan objectit kahdesta vaaditusta luokasta
             AssetManager assetManager = context.getAssets();
             AssetFileDescriptor descriptor;
 
@@ -188,6 +192,8 @@ class PongView extends SurfaceView implements Runnable {
         // liikutetaan pelaajaa jos tarve
         mPelaaja.update(mFPS);
         //mPelaaja2.update(mFPS);
+        mTietokone.update(mFPS);
+
         mPallo.update(mFPS);
         // tarkistus jos pallo osuu pelaajaan
         if(RectF.intersects(mPelaaja.getRect(), mPallo.getRect())) {
@@ -271,7 +277,7 @@ class PongView extends SurfaceView implements Runnable {
             mCanvas = mOurHolder.lockCanvas();
 
             // taustaväri vihreäksi (toki voi muuttaa vaan kuvaksi drawableen jos haluaa)
-            mCanvas.drawColor(Color.argb(255, 120, 197, 87));
+            mCanvas.drawColor(Color.argb(255, 0, 0, 0));
 
             // vaihdetaan väri valkoiseksi
             mPaint.setColor(Color.argb(255, 255, 255, 255));
@@ -279,12 +285,13 @@ class PongView extends SurfaceView implements Runnable {
             // piirretään pelaaja
             mCanvas.drawRect(mPelaaja.getRect(), mPaint);
             //mCanvas.drawRect(mPelaaja2.getRect(), mPaint);
+            mCanvas.drawRect(mTietokone.getRect(), mPaint);
 
             // piirretään pallo
             mCanvas.drawRect(mPallo.getRect(), mPaint);
 
 
-            // Change the drawing color to white
+            // piirtoväri valkoiseksi
             mPaint.setColor(Color.argb(255, 255, 255, 255));
 
             // piirretään pistetys
